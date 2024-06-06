@@ -8,9 +8,6 @@ function App() {
   return (
     <>
       <Navbar></Navbar>
-      <div className='bg-red-500'>
-        aaaaaaaa
-      </div>
     </>
   )
 }
