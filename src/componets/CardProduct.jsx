@@ -1,18 +1,28 @@
 
-function CardProduct(item) {
+function CardProduct({ item, key }) {
+  if (item.original_price) {
+    item.discounts = true
+    item.discounts = Math.round((item.original_price - item.price) * 100 / item.original_price)
+  } else {
+    item.discounts = null
+  }
 
   return (
-    <>
-      <div key={key} className='bg-white m-5  rounded-lg p-5 flex flex-col w-96 hover:cursor-pointer shadow-lg hover:shadow-xl'>
-        <img className='p-5' src={item.thumbnail} alt={item.thumbnail_id} />
-        <p className='text-blue-400 text-xl'>{item.title}</p>
-        <div className='flex items-center gap-5'>
-          <p className='text-gray-800 text-start text-3xl'>${item.price}</p>
-          <p className='text-green-500 text-start text-lg'>40% OFF</p>
-        </div>
-        {item.shipping.free_shipping && <p className='text-green-600 text-start text-lg'>Envio gratis</p>}
+    <div key={key} className='bg-white m-3 rounded-lg px-4 pb-4 flex flex-col w-[17rem] hover:cursor-pointer shadow-lg hover:shadow-xl hover:text-blue-400'>
+
+      <div className="flex wrap flex-wrap w-full justify-center">
+        <img className='h-[250px] w-auto' src={item.thumbnail} alt={item.thumbnail_id} />
+        <p className='text-lg w-full'>{item.title.slice(0, 20)}...</p>
       </div>
-    </>
+
+      {item.discounts && <p className='text-gray-800 text-start text-md line-through'> ${item.original_price} </p>}
+      <div className='flex items-center gap-2'>
+        <p className='text-gray-800 text-start text-3xl'>${item.price.toLocaleString("es-AR")}</p>
+        <p className='text-green-500 text-start text-lg'>{item.discounts && "%" + item.discounts + " OFF"}</p>
+      </div>
+      {item.shipping.free_shipping && <p className='text-green-600 font-semibold text-start text-lg'>Envio gratis</p>}
+      {item.condition != "new" && <p className='text-gray-600 text-start'>Usado</p>}
+    </div>
   )
 }
 
@@ -20,41 +30,12 @@ export default CardProduct
 
 // Object { id: "MLA1428713441", title: "Notebook Asus X515 Core I7 1165g7 24gb Ssd 1tb 15.6 Fhd Cts Color Slate Gray", condition: "new", thumbnail_id: "736364-MLA71084637482_082023", catalog_product_id: "MLA26080905", listing_type_id: "gold_pro", permalink: "https://www.mercadolibre.com.ar/notebook-asus-x515-core-i7-1165g7-24gb-ssd-1tb-156-fhd-cts-color-slate-gray/p/MLA26080905", buying_mode: "buy_it_now", site_id: "MLA", category_id: "MLA1652", … }
 // ​
-// accepts_mercadopago: true
-// ​
-// attributes: Array(10) [ {…}, {…}, {…}, … ]
-// ​
-// available_quantity: 1
-// ​
-// buying_mode: "buy_it_now"
-// ​
-// catalog_listing: true
-// ​
-// catalog_product_id: "MLA26080905"
-// ​
-// category_id: "MLA1652"
 // ​
 // condition: "new"
-// ​
-// currency_id: "ARS"
 // ​
 // differential_pricing: Object { id: 35713292 }
 // ​
 // discounts: null
-// ​
-// domain_id: "MLA-NOTEBOOKS"
-// ​
-// id: "MLA1428713441"
-// ​
-// installments: Object { quantity: 12, amount: 102499.17, rate: 0, … }
-// ​
-// inventory_id: "NUOM61319"
-// ​
-// listing_type_id: "gold_pro"
-// ​
-// official_store_id: null
-// ​
-// order_backend: 50
 // ​
 // original_price: null
 // ​
