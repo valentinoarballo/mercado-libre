@@ -29,10 +29,17 @@ function App() {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchInput(e.target.value)
+  }
 
   return (
     <div >
-      <Navbar></Navbar>
+      <Navbar 
+        searchInput={searchInput}
+        handleSearch={handleSearch}
+        handleKeyUp={handleKeyUp}
+      />
 
       {/* <div className="relative">
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -44,16 +51,16 @@ function App() {
           id="searchBar"
           type="search"
           value={searchInput}
-          onChange={e => setSearchInput(e.target.value)}
+          onChange={handleSearch}
           onKeyUp={handleKeyUp}
           className="block w-full p-4 ps-10 text-sm border rounded-lg shadow-inner bg-gray-200 placeholder-gray-500 text-black focus:ring-blue-300 focus:border-blue-300"
           placeholder="busca pibe"
         />
       </div> */}
 
-      <div className='flex flex-wrap w-full justify-center px-20'>
+      <div className='flex flex-wrap w-full justify-center xl:px-56 lg:px-40 px-20'>
         {articles.map((item, key) => (
-          <CardProduct item={item} key={key} />
+          <CardProduct item={item} itemKey={key} />
         ))}
       </div>
     </div>
