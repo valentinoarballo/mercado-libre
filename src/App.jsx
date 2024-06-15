@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+import ShoppingCart from './componets/ShoppingCart.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div className='bg-red-500'>
-        aaaaaaaa
-      </div>
+      <ShoppingCart></ShoppingCart>
     </>
   )
 }
