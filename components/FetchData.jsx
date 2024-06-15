@@ -3,7 +3,7 @@ import axios from 'axios';
 const FetchData = async (endpoint) => {
   try {
     const response = await axios.get(
-      `https://api.mercadolibre.com/sites/MLA/${endpoint}`,
+      `https://api.mercadolibre.com/${endpoint}`,
       {
         headers: {
           'Content-Type': 'application/json',

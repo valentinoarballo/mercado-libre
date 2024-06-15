@@ -1,14 +1,16 @@
+"use client"
 import { useState } from "react";
+import { useSearch } from '@/context/SearchContext';
 
-
-const Navbar = ({ searchInput, handleSearch, handleKeyUp, }) => {
+const Navbar = () => {
+  const { searchInput, handleSearch, handleKeyUp } = useSearch();
 
   const [navbarMenuHidden, setNavbarMenuHidden] = useState(true);
 
   return (
     <nav className="bg-yellow-400">
       <div className="justify-evenly w-screen-xl flex flex-wrap items-center p-4">
-        <a href="#">
+        <a href="/">
           <img src="/images/logo.png" className="h-8" alt="Mercado Libre Logo" />
         </a>
         <div>
