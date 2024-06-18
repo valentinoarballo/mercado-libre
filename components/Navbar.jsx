@@ -42,11 +42,11 @@ const Navbar = () => {
             <span className="sr-only">Search</span>
           </button>
         </div>
-        <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="hidden hover:transition transition sm:flex text-gray-800 hover:text-gray-600">
+        <a href="/cart" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="hidden hover:transition transition sm:flex text-gray-800 hover:text-gray-600">
           <svg width="25" height="25" fill="currentColor" className="bi bi-cart2 cursor-pointer" viewBox="0 0 16 16">
             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
           </svg>
-        </button>
+        </a>
         <div className={navbarMenuHidden ? 'hidden' : "items-center justify-between w-full md:flex md:w-auto md:order-1"} id="navbar-search">
           <div className="relative mt-3 md:hidden">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
