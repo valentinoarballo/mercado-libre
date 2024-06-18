@@ -1,5 +1,7 @@
+"use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from 'next/navigation';
 import FetchData from "./FetchData";
 import ImageCarousel from "./ImageCarousel";
 import ProductCarousel from "./ProductCarousel";
@@ -9,9 +11,13 @@ const ProductDetail = (props) => {
     [itemInfo, setItemInfo] = useState(),
     [interestCategory, setInterestCategory] = useState(null),
     [selectedImage, setSelectedImage] = useState(0),
+    [selectedQuantity, setSelectedQuantity] = useState(1),
+    [dropdownQuantity, setDropdownQuantity] = useState(false),
     [sellerInfo, setSellerInfo] = useState(),
     [sizes, setSizes] = useState();
 
+  const router = useRouter();
+  const dropdownRef = useRef(null);
 
   const getLastSearch = () => {
     try {
@@ -29,48 +35,84 @@ const ProductDetail = (props) => {
     setInterestCategory(lastSearch);
   }, []);
 
-
   useEffect(() => {
     getItemInfo();
     getDescription();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (itemInfo) {
       getSellerInfo();
     }
-  }, [itemInfo])
+  }, [itemInfo]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownQuantity(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const getItemInfo = async () => {
     try {
-      const endpoint = `items/${props.itemId}`
-      const data = await FetchData(endpoint)
+      const endpoint = `items/${props.itemId}`;
+      const data = await FetchData(endpoint);
       setItemInfo(data);
       getSizes(data);
     } catch (error) {
       console.error("An error has occurred while fetching item's description", error);
     }
-  }
+  };
 
   const getDescription = async () => {
     try {
-      const endpoint = `items/${props.itemId}/description`
-      const data = await FetchData(endpoint)
+      const endpoint = `items/${props.itemId}/description`;
+      const data = await FetchData(endpoint);
       setProductDescription(data.plain_text);
     } catch (error) {
       console.error("An error has occurred while fetching item's description", error);
     }
-  }
+  };
 
   const getSellerInfo = async () => {
     try {
-      const endpoint = `users/${itemInfo.seller_id}`
-      const data = await FetchData(endpoint)
+      const endpoint = `users/${itemInfo.seller_id}`;
+      const data = await FetchData(endpoint);
       setSellerInfo({ nickname: data.nickname, link: data.permalink });
     } catch (error) {
       console.error("An error has occurred while fetching item's description", error);
     }
-  }
+  };
+
+  const handleBuyNow = async () => {
+    try {
+      let cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
+      cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
+      localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+      router.push("/");
+    } catch (error) {
+      console.error('Error al guardar la búsqueda en el local storage:', error);
+    }
+  };
+
+  const handleAddProductToCart = async () => {
+    try {
+      let cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
+      const productExists = cartProducts.some(product => product.id === itemInfo.id);
+      if (!productExists) {
+        cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
+        localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+      }
+    } catch (error) {
+      console.error('Error al guardar la búsqueda en el local storage:', error);
+    }
+  };
 
   const getSizes = (item) => {
     let availableSizes = [];
@@ -81,10 +123,10 @@ const ProductDetail = (props) => {
             availableSizes.push(atrComb.value_name);
           }
         }
-      })
-    })
+      });
+    });
     setSizes(availableSizes);
-  }
+  };
 
   return (
     <>
@@ -112,7 +154,7 @@ const ProductDetail = (props) => {
                 <div
                   onClick={() => setSelectedImage(4)}
                   onMouseEnter={() => setSelectedImage(4)}
-                  className="relative p-1 my-2  rounded-xlw-auto h-auto max-h-[4rem] max-w-[4rem]flex items-center justify-center"
+                  className="relative p-1 my-2  rounded-xlw-auto h-auto max-h-[4rem] max-w-[4rem] flex items-center justify-center"
                 >
                   <img
                     src={itemInfo.pictures[4].url}
@@ -160,8 +202,30 @@ const ProductDetail = (props) => {
                   </div>
                 </div>
               }
-              <button className="transition-all bg-blue-500 w-full hover:bg-blue-600 text-white py-3 px-4 rounded font-medium">Comprar ahora</button>
-              <button className="transition-all bg-blue-200 w-full hover:bg-blue-300 text-blue-700 py-3 px-4 rounded font-medium">Agregar al carrito</button>
+
+              <div ref={dropdownRef}>
+                <button onClick={() => setDropdownQuantity(!dropdownQuantity)} className="text-md text-center inline-flex items-center" type="button">
+                  Cantidad:
+                  <p className="ml-2.5 font-medium">{selectedQuantity} unidades</p>
+                  <svg className="w-2.5 h-2.5 ms-2" aria-hidden="true" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+                  </svg>
+                </button>
+
+                <div className={`z-10 ${dropdownQuantity ? "" : "hidden"} absolute bg-white divide-y divide-gray-100 rounded-sm border shadow-xl w-auto min-w-[15rem]`}>
+                  <ul className="py-2 text-sm text-gray-700">
+                    <button onClick={()=>setSelectedQuantity(1)} className={`block ${selectedQuantity === 1 ? "border-l-4 border-blue-500 text-blue-500":""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{1} unidad</button>
+                    {[...Array(5)].map((_, index) => (
+                      <li key={index}>
+                        <button onClick={()=>setSelectedQuantity(index+2)} className={`block ${selectedQuantity === index+2 ? "border-l-4 border-blue-500 text-blue-500":""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{index + 2} unidades</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <button onClick={handleBuyNow} className="transition-all bg-blue-500 w-full hover:bg-blue-600 text-white py-3 px-4 rounded font-medium">Comprar ahora</button>
+              <button onClick={handleAddProductToCart} className="transition-all bg-blue-200 w-full hover:bg-blue-300 text-blue-700 py-3 px-4 rounded font-medium">Agregar al carrito</button>
               <p className="font-light text-sm mt-2">Vendido por <a className="text-blue-500" href={sellerInfo && sellerInfo.link}>{sellerInfo && sellerInfo.nickname}</a></p>
               <p className="text-gray-500 text-sm">
                 <svg width="16" height="16" fill="currentColor" className="bi bi-shield-check inline" viewBox="0 0 16 16">
@@ -172,7 +236,6 @@ const ProductDetail = (props) => {
             </div>
           </div>
         </div>
-
       </section>
       {itemInfo && (
         <ProductCarousel
@@ -195,11 +258,8 @@ const ProductDetail = (props) => {
       ) : (
         <section></section>
       )}
-
-
     </>
-  )
-
-}
+  );
+};
 
 export default ProductDetail;
