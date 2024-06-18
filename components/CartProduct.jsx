@@ -34,7 +34,7 @@ const CartProduct = (props) => {
 
 
   const increaseDecreaseAmount = (increase) => {
-    if (!increase && amount === 0) {
+    if (!increase && amount === 1) {
       return;
     }
     setAmount(amount + (increase ? 1 : -1));
