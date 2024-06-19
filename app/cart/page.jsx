@@ -22,7 +22,7 @@ function ComponentCarousel() {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-grow relative w-full overflow-y-auto">
+      <div className="flex-grow relative w-full overflow-x-hidden">
         <div className="absolute inset-0 flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {components.map((Component, index) => (
             <div key={index} className="w-full h-full flex-shrink-0">
