@@ -4,11 +4,19 @@ import { useSearch } from '@/context/SearchContext';
 
 const Navbar = () => {
   const { searchInput, handleSearch, handleKeyUp } = useSearch();
-
   const [navbarMenuHidden, setNavbarMenuHidden] = useState(true);
 
+  const cartProductsCounter = () => {
+    try {
+      const cartProductsLocalStorage = JSON.parse(localStorage.getItem("cartProducts"));
+      return (cartProductsLocalStorage.length);
+    } catch {
+      console.log("no hay productos en el carrito")
+    }
+  }
+
   return (
-    <nav className="bg-yellow-400">
+    <nav id="navbar" className="bg-yellow-400">
       <div className="justify-evenly w-screen-xl flex flex-wrap items-center p-4">
         <a href="/">
           <img src="/images/logo.png" className="h-8" alt="Mercado Libre Logo" />
@@ -42,11 +50,14 @@ const Navbar = () => {
             <span className="sr-only">Search</span>
           </button>
         </div>
-        <a href="/cart" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="hidden hover:transition transition sm:flex text-gray-800 hover:text-gray-600">
+
+        <a href="/cart" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="relative hidden hover:transition transition sm:flex text-gray-800 hover:text-gray-600">
+          {cartProductsCounter() != 0 && <p className="absolute -top-3 -right-3 opacity-95 rounded-full bg-blue-300 flex text-center items-center px-2 text-sm font-semibold">{cartProductsCounter()}</p>}
           <svg width="25" height="25" fill="currentColor" className="bi bi-cart2 cursor-pointer" viewBox="0 0 16 16">
             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
           </svg>
         </a>
+
         <div className={navbarMenuHidden ? 'hidden' : "items-center justify-between w-full md:flex md:w-auto md:order-1"} id="navbar-search">
           <div className="relative mt-3 md:hidden">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
