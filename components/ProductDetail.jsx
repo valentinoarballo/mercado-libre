@@ -93,9 +93,12 @@ const ProductDetail = (props) => {
   const handleBuyNow = async () => {
     try {
       let cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
-      cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
-      localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
-      router.push("/");
+      const productExists = cartProducts.some(product => product.id === itemInfo.id);
+      if (!productExists) {
+        cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
+        localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+      }
+      router.push("/cart");
     } catch (error) {
       console.error('Error al guardar la búsqueda en el local storage:', error);
     }
