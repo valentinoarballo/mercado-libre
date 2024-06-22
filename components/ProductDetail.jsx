@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import FetchData from "./FetchData";
 import ImageCarousel from "./ImageCarousel";
 import ProductCarousel from "./ProductCarousel";
+import { useSearch } from "@/context/SearchContext";
 
 const ProductDetail = (props) => {
   const [productDescription, setProductDescription] = useState(),
@@ -14,7 +15,8 @@ const ProductDetail = (props) => {
     [selectedQuantity, setSelectedQuantity] = useState(1),
     [dropdownQuantity, setDropdownQuantity] = useState(false),
     [sellerInfo, setSellerInfo] = useState(),
-    [sizes, setSizes] = useState();
+    [sizes, setSizes] = useState(),
+    {setCartProductsQuantity} = useSearch();
 
   const router = useRouter();
   const dropdownRef = useRef(null);
@@ -111,6 +113,7 @@ const ProductDetail = (props) => {
       if (!productExists) {
         cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
         localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+        setCartProductsQuantity(cartProducts.length);
       }
     } catch (error) {
       console.error('Error al guardar la búsqueda en el local storage:', error);

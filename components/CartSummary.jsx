@@ -9,13 +9,15 @@ function CartSummary({ updateCartTotal, updateShippingCost }) {
   useEffect(() => {
     const fetchCartProducts = async () => {
       const cartProductsLocalStorage = await JSON.parse(localStorage.getItem("cartProducts"));
-      const fetchedCartProducts = await Promise.all(
-        cartProductsLocalStorage.map(async (product) => {
-          const data = await FetchData(`items/${product.id}`);
-          return { id: product.id, title: data.title, price: data.price, pictureUrl: data.pictures[0].url, sellerId: data.seller_id, quantity: product.quantity, freeShipping: data.shipping.free_shipping };
-        })
-      )
-      setCartProductsData(fetchedCartProducts);
+      if(cartProductsLocalStorage){
+        const fetchedCartProducts = await Promise.all(
+          cartProductsLocalStorage.map(async (product) => {
+            const data = await FetchData(`items/${product.id}`);
+            return { id: product.id, title: data.title, price: data.price, pictureUrl: data.pictures[0].url, sellerId: data.seller_id, quantity: product.quantity, freeShipping: data.shipping.free_shipping };
+          })
+        )
+        setCartProductsData(fetchedCartProducts);
+      }
     }
     fetchCartProducts();
   }, [])
