@@ -13,7 +13,7 @@ function HeroCarousel({ images }) {
   };
 
   return (
-    <div id="controls-carousel" className="relative w-full" data-carousel="static">
+    <div id="controls-carousel" className="relative z-30 w-full" data-carousel="static">
       <div className="relative h-56 overflow-hidden md:h-96">
         {images.map((image, index) => (
           <div
@@ -24,7 +24,7 @@ function HeroCarousel({ images }) {
           >
             <img
               src={image}
-              className="h-auto min-h-[400px] object-cover"
+              className="w-screen object-cover"
               alt={`Slide ${index + 1}`}
             />
           </div>

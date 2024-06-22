@@ -7,20 +7,22 @@ const Pagination = () => {
 
   return (
     <div className='flex justify-between w-1/4 my-4 py-4'>
-      <button
+      <a
+        href="#navbar"
         onClick={handlePrevPage}
         disabled={paging.offset === 0}
         className={`p-2 border rounded ${paging.offset === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         Previous
-      </button>
-      <button
+      </a>
+      <a
+        href="#navbar"
         onClick={handleNextPage}
         disabled={paging.offset + paging.limit >= paging.total}
         className={`p-2 border rounded ${paging.offset + paging.limit >= paging.total ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         Next
-      </button>
+      </a>
     </div>
   );
 };

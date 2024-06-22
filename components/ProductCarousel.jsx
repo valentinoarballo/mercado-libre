@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import CardProduct from './CardProduct';
 import FetchData from './FetchData';
+import CardLoading from './CardLoading';
 
 function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "notebooks", total = 0, offset = 0, limit = 20 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,7 +14,12 @@ function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "
       try {
         const endpoint = `sites/MLA/search?q=${endpointCarousel}&limit=${paging.limit}&offset=${paging.offset}`;
         const response = await FetchData(endpoint);
-        setArticles(response.results);
+        response.results.map(async (item) => {
+          const endpoint = `items/${item.id}`;
+          const data = await FetchData(endpoint);
+          item.thumbnail = data.pictures[0].url
+        })
+        setTimeout(() => setArticles(response.results), 1000)
         setPaging(response.paging);
       } catch (error) {
         console.error('Error al obtener los artículos:', error);
@@ -40,20 +46,30 @@ function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "
       <div className='bg-gray-200 shadow-inner rounded-xl pt-8'>
         <p className='absolute ml-10 text-xl font-medium'>{title}</p>
         <div className="relative overflow-hidden flex items-center h-[30rem]">
-          {groupedArticles.map((group, index) => (
-            <div
-              key={index}
-              className={`absolute flex justify-center items-center w-full transition-all duration-700 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'
-                }`}
-              style={{ transform: `translateX(${(index - currentIndex) * 100}%)` }}
-            >
-              {group.map((item) => (
-                <div key={item.id} className="p-2">
-                  <CardProduct item={item} />
+          {groupedArticles.length === 0 ? (
+            <>
+              {[...Array(5)].map((_, index) => (
+                <CardLoading />
+              ))}
+            </>
+          ) : (
+            <>
+              {groupedArticles.map((group, index) => (
+                <div
+                  key={index}
+                  className={`absolute flex justify-center items-center w-full transition-all duration-700 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  style={{ transform: `translateX(${(index - currentIndex) * 100}%)` }}
+                >
+                  {group.map((item) => (
+                    <div key={item.id} className="p-2">
+                      <CardProduct item={item} />
+                    </div>
+                  ))}
                 </div>
               ))}
-            </div>
-          ))}
+            </>
+          )}
         </div>
 
         <button className="absolute top-0 left-[10rem] z-30 flex items-center justify-start h-full px-4 cursor-pointer group focus:outline-none"

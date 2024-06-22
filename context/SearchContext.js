@@ -16,7 +16,12 @@ export const SearchProvider = ({ children }) => {
       try {
         const endpoint = `sites/MLA/search?q=${terminoBusqueda}&limit=${paging.limit}&offset=${paging.offset}`;
         const response = await FetchData(endpoint);
-        setArticles(response.results);
+        response.results.map( async (item) => {
+          const endpoint = `items/${item.id}`;
+          const data = await FetchData(endpoint);
+          item.thumbnail = data.pictures[0].url
+        })
+        setTimeout(()=> setArticles(response.results), 1000)
         setPaging(response.paging);
       } catch (error) {
         console.error('Error al obtener los artículos:', error);
