@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import HeroCarousel from '@/components/HeroCarousel';
 import ProductCarousel from '@/components/ProductCarousel';
 import CategoryCarousel from '@/components/CategoryCarousel';
+import Footer from '@/components/Footer';
 
 const Home = () => {
   const [interestCategory, setInterestCategory] = useState(null);
@@ -15,11 +16,11 @@ const Home = () => {
     'https://http2.mlstatic.com/D_NQ_905292-MLA76622683430_062024-OO.webp'
   ];
 
-  const getLastSearch = () => {
+  const getLastSearch = (search) => {
     try {
       const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
       if (searchHistory.length === 0) return null;
-      return searchHistory[searchHistory.length - 1];
+      return searchHistory[searchHistory.length - search];
     } catch (error) {
       console.error('Error al obtener la última búsqueda del local storage:', error);
       return null;
@@ -27,18 +28,17 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const lastSearch = getLastSearch();
+    const lastSearch = getLastSearch(1);
     setInterestCategory(lastSearch);
   }, []);
 
   return (
     <div>
       <HeroCarousel images={images} />
-      
       {interestCategory ? (
         <ProductCarousel
           title={"Basado en tus búsquedas recientes"}
-          endpointCarousel={interestCategory}
+          endpointCarousel={getLastSearch(1)}
           total={0}
           offset={0}
           limit={20}
@@ -65,6 +65,19 @@ const Home = () => {
         limit={20}
       />
 
+      {interestCategory ? (
+        <ProductCarousel
+          title={"Basado en tus intereses"}
+          endpointCarousel={getLastSearch(2)}
+          total={0}
+          offset={0}
+          limit={20}
+        />
+      ) : (
+        <section></section>
+      )}
+
+      <Footer />
     </div>
   );
 };
