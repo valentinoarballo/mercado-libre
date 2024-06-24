@@ -14,7 +14,9 @@ const ProductDetail = (props) => {
     [selectedQuantity, setSelectedQuantity] = useState(1),
     [dropdownQuantity, setDropdownQuantity] = useState(false),
     [sellerInfo, setSellerInfo] = useState(),
-    [sizes, setSizes] = useState();
+    [sizes, setSizes] = useState(),
+    [isProductInCart, setIsProductInCart] = useState(false),
+    [isToastVisible, setIsToastVisible] = useState(false);
 
   const router = useRouter();
   const dropdownRef = useRef(null);
@@ -43,6 +45,7 @@ const ProductDetail = (props) => {
   useEffect(() => {
     if (itemInfo) {
       getSellerInfo();
+      getIsProductInCart();
     }
   }, [itemInfo]);
 
@@ -58,6 +61,14 @@ const ProductDetail = (props) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const getIsProductInCart = () => {
+    const cartProductsLocalStorage = JSON.parse(localStorage.getItem("cartProducts"));
+    if (cartProductsLocalStorage.length > 0) {
+      const productInCart = cartProductsLocalStorage.find((product) => product.id === itemInfo.id) !== undefined;
+      productInCart && setIsProductInCart(true);
+    }
+  }
 
   const getItemInfo = async () => {
     try {
@@ -91,20 +102,11 @@ const ProductDetail = (props) => {
   };
 
   const handleBuyNow = async () => {
-    try {
-      let cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
-      const productExists = cartProducts.some(product => product.id === itemInfo.id);
-      if (!productExists) {
-        cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
-        localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
-      }
-      router.push("/cart");
-    } catch (error) {
-      console.error('Error al guardar la búsqueda en el local storage:', error);
-    }
+    addProductToCart();
+    router.push("/cart");
   };
 
-  const handleAddProductToCart = async () => {
+  const addProductToCart = async () => {
     try {
       let cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
       const productExists = cartProducts.some(product => product.id === itemInfo.id);
@@ -113,8 +115,14 @@ const ProductDetail = (props) => {
         localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
       }
     } catch (error) {
-      console.error('Error al guardar la búsqueda en el local storage:', error);
+      console.error('An error has occurred while adding the product to local storage', error);
     }
+  }
+
+  const handleAddProductToCart = async () => {
+    addProductToCart();
+    setIsProductInCart(true);
+    setIsToastVisible(true);
   };
 
   const getSizes = (item) => {
@@ -133,6 +141,22 @@ const ProductDetail = (props) => {
 
   return (
     <>
+      {isToastVisible &&
+        <div id="toast-success" class="fixed bottom-4 left-4 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+            </svg>
+            <span class="sr-only">Check Icon</span>
+          </div>
+          <div class="ms-3 text-sm font-normal">Producto agregado al carrito exitosamente.</div>
+          <button onClick={() => setIsToastVisible(false)} type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+          </button>
+        </div>}
       <section className="bg-white flex justify-center pt-5 pb-20">
         <div className="container w-3/4 flex items-start">
 
@@ -217,10 +241,10 @@ const ProductDetail = (props) => {
 
                 <div className={`z-10 ${dropdownQuantity ? "" : "hidden"} absolute bg-white divide-y divide-gray-100 rounded-sm border shadow-xl w-auto min-w-[15rem]`}>
                   <ul className="py-2 text-sm text-gray-700">
-                    <button onClick={()=>setSelectedQuantity(1)} className={`block ${selectedQuantity === 1 ? "border-l-4 border-blue-500 text-blue-500":""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{1} unidad</button>
+                    <button onClick={() => setSelectedQuantity(1)} className={`block ${selectedQuantity === 1 ? "border-l-4 border-blue-500 text-blue-500" : ""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{1} unidad</button>
                     {[...Array(5)].map((_, index) => (
                       <li key={index}>
-                        <button onClick={()=>setSelectedQuantity(index+2)} className={`block ${selectedQuantity === index+2 ? "border-l-4 border-blue-500 text-blue-500":""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{index + 2} unidades</button>
+                        <button onClick={() => setSelectedQuantity(index + 2)} className={`block ${selectedQuantity === index + 2 ? "border-l-4 border-blue-500 text-blue-500" : ""} font-semibold w-full text-start px-4 py-2 hover:bg-gray-100`}>{index + 2} unidades</button>
                       </li>
                     ))}
                   </ul>
@@ -228,7 +252,7 @@ const ProductDetail = (props) => {
               </div>
 
               <button onClick={handleBuyNow} className="transition-all bg-blue-500 w-full hover:bg-blue-600 text-white py-3 px-4 rounded font-medium">Comprar ahora</button>
-              <button onClick={handleAddProductToCart} className="transition-all bg-blue-200 w-full hover:bg-blue-300 text-blue-700 py-3 px-4 rounded font-medium">Agregar al carrito</button>
+              <button onClick={!isProductInCart && handleAddProductToCart} className={`transition-all w-full ${isProductInCart ? "bg-gray-200 text-gray-400 hover:none cursor-default" : "bg-blue-200 text-blue-700 hover:bg-blue-300 "}  py-3 px-4 rounded font-medium`}>{isProductInCart ? "¡Ya está en tu carrito!" : "Agregar al carrito"}</button>
               <p className="font-light text-sm mt-2">Vendido por <a className="text-blue-500" href={sellerInfo && sellerInfo.link}>{sellerInfo && sellerInfo.nickname}</a></p>
               <p className="text-gray-500 text-sm">
                 <svg width="16" height="16" fill="currentColor" className="bi bi-shield-check inline" viewBox="0 0 16 16">
