@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import FetchData from "./FetchData";
 import ImageCarousel from "./ImageCarousel";
 import ProductCarousel from "./ProductCarousel";
+import { useSearch } from "@/context/SearchContext";
 
 const ProductDetail = (props) => {
   const [productDescription, setProductDescription] = useState(),
@@ -15,8 +16,11 @@ const ProductDetail = (props) => {
     [dropdownQuantity, setDropdownQuantity] = useState(false),
     [sellerInfo, setSellerInfo] = useState(),
     [sizes, setSizes] = useState(),
+    {setCartProductsQuantity} = useSearch();
+
     [isProductInCart, setIsProductInCart] = useState(false),
     [isToastVisible, setIsToastVisible] = useState(false);
+
 
   const router = useRouter();
   const dropdownRef = useRef(null);
@@ -113,6 +117,7 @@ const ProductDetail = (props) => {
       if (!productExists) {
         cartProducts.push({ id: itemInfo.id, quantity: selectedQuantity });
         localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+        setCartProductsQuantity(cartProducts.length);
       }
     } catch (error) {
       console.error('An error has occurred while adding the product to local storage', error);

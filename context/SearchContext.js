@@ -9,6 +9,7 @@ export const SearchProvider = ({ children }) => {
   const [searchInput, setSearchInput] = useState('');
   const [terminoBusqueda, setTerminoBusqueda] = useState('');
   const [paging, setPaging] = useState({ total: 0, offset: 0, limit: 50 });
+  const [cartProductsQuantity, setCartProductsQuantity] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,12 +17,12 @@ export const SearchProvider = ({ children }) => {
       try {
         const endpoint = `sites/MLA/search?q=${terminoBusqueda}&limit=${paging.limit}&offset=${paging.offset}`;
         const response = await FetchData(endpoint);
-        response.results.map( async (item) => {
+        response.results.map(async (item) => {
           const endpoint = `items/${item.id}`;
           const data = await FetchData(endpoint);
           item.thumbnail = data.pictures[0].url
         })
-        setTimeout(()=> setArticles(response.results), 1000)
+        setTimeout(() => setArticles(response.results), 1000)
         setPaging(response.paging);
       } catch (error) {
         console.error('Error al obtener los artículos:', error);
@@ -31,7 +32,9 @@ export const SearchProvider = ({ children }) => {
     if (terminoBusqueda) {
       cargarDatos();
     }
+    setCartProductsQuantity(JSON.parse(localStorage.getItem("cartProducts")).length);
   }, [terminoBusqueda, paging.offset]);
+
 
   const saveSearchToLocalStorage = (searchTerm) => {
     try {
@@ -67,7 +70,8 @@ export const SearchProvider = ({ children }) => {
   return (
     <SearchContext.Provider value={{
       articles, searchInput, handleSearch, handleKeyUp,
-      paging, handleNextPage, handlePrevPage
+      paging, handleNextPage, handlePrevPage, cartProductsQuantity,
+      setCartProductsQuantity
     }}>
       {children}
     </SearchContext.Provider>

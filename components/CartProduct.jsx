@@ -1,12 +1,16 @@
 "use client"
 
+import { useSearch } from "@/context/SearchContext"
+
 const CartProduct = ({ id, quantity, pictureUrl, title, price, sellerLink, setCartProductsData, cartProductsData }) => {
+  const { setCartProductsQuantity } = useSearch();
 
   const remove = () => {
     setCartProductsData(prevCartProductsData => [...prevCartProductsData.filter((product) => product.id !== id)])
     const cartProductsLocalStorage = JSON.parse(localStorage.getItem("cartProducts"));
     const cartProductsLocalStorageUpdated = cartProductsLocalStorage.filter((prod) => prod.id !== id);
     localStorage.setItem("cartProducts", JSON.stringify(cartProductsLocalStorageUpdated));
+    setCartProductsQuantity(cartProductsLocalStorageUpdated.length);
   }
 
   const increaseDecreaseQuantity = (increase) => {
@@ -23,7 +27,7 @@ const CartProduct = ({ id, quantity, pictureUrl, title, price, sellerLink, setCa
     setCartProductsData(cartProductsUpdated);
     const cartProductsLocalStorage = JSON.parse(localStorage.getItem("cartProducts"));
     const cartProductsLocalStorageUpdated = cartProductsLocalStorage.map(callback);
-    localStorage.setItem("cartProducts",JSON.stringify(cartProductsLocalStorageUpdated));
+    localStorage.setItem("cartProducts", JSON.stringify(cartProductsLocalStorageUpdated));
 
   }
 
