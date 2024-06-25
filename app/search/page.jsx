@@ -10,7 +10,7 @@ const SearchPage = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <div className='flex flex-wrap w-full justify-center xl:px-56 lg:px-40 px-20'>
+      <div className='animate-fade-down animate-once animate-duration-[2000ms] animate-ease-in-out flex flex-wrap w-full justify-center xl:px-56 lg:px-40 px-20'>
         {articles.length === 0 ? (
           <>
             {[...Array(50)].map(((_, index) => (

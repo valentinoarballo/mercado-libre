@@ -34,26 +34,34 @@ const Home = () => {
 
   return (
     <div>
-      <HeroCarousel images={images} />
-      {interestCategory ? (
+      <div className='animate-fade-right animate-once animate-duration-500 animate-ease-in-out'>
+        <HeroCarousel images={images} />
+      </div>
+
+      <div className='animate-fade-left animate-duration-[800ms] animate-once animate-ease-in-out'>
         <ProductCarousel
-          title={"Basado en tus búsquedas recientes"}
-          endpointCarousel={getLastSearch(1)}
+          title={"Mas vendidos de notebooks gamers"}
+          endpointCarousel={"notebook gamer rog"}
           total={0}
           offset={0}
           limit={20}
         />
-      ) : (
-        <section></section>
-      )}
+      </div>
 
-      <ProductCarousel
-        title={"Mas vendidos de notebooks gamers"}
-        endpointCarousel={"notebook gamer rog"}
-        total={0}
-        offset={0}
-        limit={20}
-      />
+      <div className='animate-fade animate-once animate-ease-in-out'>
+        {interestCategory ? (
+          <ProductCarousel
+            title={"Basado en tus búsquedas recientes"}
+            endpointCarousel={getLastSearch(1)}
+            total={0}
+            offset={0}
+            limit={20}
+          />
+
+        ) : (
+          <section></section>
+        )}
+      </div>
 
       <CategoryCarousel />
 
