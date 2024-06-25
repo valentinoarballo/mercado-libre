@@ -1,13 +1,21 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import CardProduct from './CardProduct';
 import FetchData from './FetchData';
 import CardLoading from './CardLoading';
 
-function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "notebooks", total = 0, offset = 0, limit = 20 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [articles, setArticles] = useState([]);
-  const [paging, setPaging] = useState({ total, offset, limit });
+function ProductCarousel(
+  {
+    title = "Nombre de la sección",
+    endpointCarousel = "notebooks",
+    total = 0,
+    offset = 0,
+    limit = 20,
+  }
+) {
+  const [currentIndex, setCurrentIndex] = useState(0),
+    [articles, setArticles] = useState([]),
+    [paging, setPaging] = useState({ total, offset, limit });
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -47,13 +55,13 @@ function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "
         <p className='absolute ml-10 text-xl font-medium'>{title}</p>
         <div className="relative overflow-hidden flex items-center h-[30rem]">
           {groupedArticles.length === 0 ? (
-            <>
+            <Fragment>
               {[...Array(5)].map((_, index) => (
-                <CardLoading />
+                <CardLoading key={(index)}/>
               ))}
-            </>
+            </Fragment>
           ) : (
-            <>
+            <Fragment>
               {groupedArticles.map((group, index) => (
                 <div
                   key={index}
@@ -68,7 +76,8 @@ function ProductCarousel({ title = "Nombre de la sección", endpointCarousel = "
                   ))}
                 </div>
               ))}
-            </>
+            </Fragment>
+
           )}
         </div>
 

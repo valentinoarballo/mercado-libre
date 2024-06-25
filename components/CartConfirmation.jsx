@@ -1,6 +1,13 @@
 import React from 'react';
 
-function CartConfirmation({ paymentMethod, shippingMethod, total, shippingCost }) {
+function CartConfirmation(
+  {
+    paymentMethod,
+    shippingMethod,
+    total,
+    shippingCost
+  }
+) {
   return (
     <section className='flex flex-col justify-center items-center w-full h-[80vh]'>
       <div className='p-10 w-1/3 border shadow-xl rounded-xl'>

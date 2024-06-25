@@ -4,8 +4,8 @@ import FetchData from './FetchData';
 import CardCategory from './CardCategory';
 
 function CategoryCarousel() {
-  const [categories, setCategories] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [categories, setCategories] = useState([]),
+  [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -55,7 +55,7 @@ function CategoryCarousel() {
               style={{ transform: `translateX(${(index - currentIndex) * 100}%)` }}
             >
               {group.map((category, key) => (
-                <div id={key}>
+                <div key={key}>
                   <CardCategory category={category} key={key} />
                 </div>
               ))}

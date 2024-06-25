@@ -2,7 +2,18 @@
 
 import { useSearch } from "@/context/SearchContext"
 
-const CartProduct = ({ id, quantity, pictureUrl, title, price, sellerLink, setCartProductsData, cartProductsData }) => {
+const CartProduct = (
+  {
+    id,
+    quantity,
+    pictureUrl,
+    title,
+    price,
+    sellerLink,
+    setCartProductsData,
+    cartProductsData
+  }
+) => {
   const { setCartProductsQuantity } = useSearch();
 
   const remove = () => {
