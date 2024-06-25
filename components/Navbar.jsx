@@ -3,9 +3,9 @@ import { useContext, useState } from "react";
 import { useSearch } from '@/context/SearchContext';
 
 const Navbar = () => {
-  const { searchInput, handleSearch, handleKeyUp } = useSearch();
-  const [navbarMenuHidden, setNavbarMenuHidden] = useState(true);
-  const {cartProductsQuantity} = useSearch();
+  const { searchInput, handleSearch, handleKeyUp } = useSearch(),
+  [navbarMenuHidden, setNavbarMenuHidden] = useState(true),
+  {cartProductsQuantity} = useSearch();
 
   return (
     <nav id="navbar" className="bg-yellow-400">
@@ -27,7 +27,7 @@ const Navbar = () => {
               value={searchInput}
               onChange={handleSearch}
               onKeyUp={handleKeyUp}
-              className="block w-full p-2 px-10 ps-10 pr-40 text-lg text-gray-900 border border-gray-400 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Buscar productos y más..."
+              className="block w-full md:w-[700px] p-2 px-10 ps-10 text-lg text-gray-900 border border-gray-400 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Buscar productos y más..."
             />
           </div>
           <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" className="md:hidden transition hover:transition text-gray-600 hover:text-gray-500 p-2.5 me-1">

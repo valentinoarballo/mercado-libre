@@ -6,7 +6,7 @@ import ImageCarousel from "./ImageCarousel";
 import ProductCarousel from "./ProductCarousel";
 import { useSearch } from "@/context/SearchContext";
 
-const ProductDetail = (props) => {
+const ProductDetail = ({itemId}) => {
   const [productDescription, setProductDescription] = useState(),
     [itemInfo, setItemInfo] = useState(),
     [interestCategory, setInterestCategory] = useState(null),
@@ -76,7 +76,7 @@ const ProductDetail = (props) => {
 
   const getItemInfo = async () => {
     try {
-      const endpoint = `items/${props.itemId}`;
+      const endpoint = `items/${itemId}`;
       const data = await FetchData(endpoint);
       setItemInfo(data);
       getSizes(data);
@@ -87,7 +87,7 @@ const ProductDetail = (props) => {
 
   const getDescription = async () => {
     try {
-      const endpoint = `items/${props.itemId}/description`;
+      const endpoint = `items/${itemId}/description`;
       const data = await FetchData(endpoint);
       setProductDescription(data.plain_text);
     } catch (error) {
