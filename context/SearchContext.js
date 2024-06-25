@@ -32,7 +32,12 @@ export const SearchProvider = ({ children }) => {
     if (terminoBusqueda) {
       cargarDatos();
     }
-    setCartProductsQuantity(JSON.parse(localStorage.getItem("cartProducts")).length);
+    try {
+      setCartProductsQuantity(JSON.parse(localStorage.getItem("cartProducts")).length);
+    } catch {
+      setCartProductsQuantity(null)
+    }
+
   }, [terminoBusqueda, paging.offset]);
 
 
