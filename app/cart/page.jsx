@@ -5,13 +5,16 @@ import PaymentMethod from '@/components/PaymentMethod';
 import ShippingMethod from '@/components/ShippingMethod';
 import CartConfirmation from '@/components/CartConfirmation';
 import { useRouter } from 'next/navigation';
+import { useSearch } from "@/context/SearchContext";
 
 function ComponentCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
-  const [cartTotal, setCartTotal] = useState(0);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0),
+    [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null),
+    [selectedShippingMethod, setSelectedShippingMethod] = useState(null),
+    [cartTotal, setCartTotal] = useState(0),
+    [shippingCost, setShippingCost] = useState(0);
+
+  const { setCartProductsQuantity } = useSearch();
   const router = useRouter();
 
   const handleNext = () => {
@@ -44,6 +47,7 @@ function ComponentCarousel() {
 
   const finishPurchase = () => {
     localStorage.setItem("cartProducts", "[]");
+    setCartProductsQuantity(0);
     router.push("/");
   };
 
