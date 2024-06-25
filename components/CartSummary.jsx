@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import CartProduct from "@/components/CartProduct";
 import { useEffect, useState } from "react";
 import FetchData from './FetchData';
@@ -48,12 +48,12 @@ function CartSummary({ updateCartTotal, updateShippingCost }) {
             return <CartProduct key={index} cartProductsData={cartProductsData} id={cartProduct.id} price={cartProduct.price} title={cartProduct.title} setCartProductsData={setCartProductsData}
               pictureUrl={cartProduct.pictureUrl} quantity={cartProduct.quantity} sellerLink={"https://listado.mercadolibre.com.ar/_CustId_" + cartProduct.sellerId}></CartProduct>;
           }) : (
-            <>
+            <Fragment>
               <p className="text-center pt-20 text-gray-800 font-medium text-2xl">No tienes productos en el carrito aún, ¡Sigue navegando!</p>
               <div className="w-full flex justify-center mt-8">
                 <a href="/" className="text-center p-4 rounded-lg shadow bg-blue-500 hover:bg-blue-600 shado-xl text-white">Volver a la página principal</a>
               </div>
-            </>
+            </Fragment>
           )
           }
           <div className={cartProductsData && cartProductsData.length === 0 ? "hidden" : "flex items-center pt-10 gap-10 text-lg border-b pb-10 justify-end"}>

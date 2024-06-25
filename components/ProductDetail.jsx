@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from 'next/navigation';
 import FetchData from "./FetchData";
 import ImageCarousel from "./ImageCarousel";
@@ -145,7 +145,7 @@ const ProductDetail = (props) => {
   };
 
   return (
-    <>
+    <Fragment>
       {isToastVisible &&
         <div id="toast-success" className="fixed bottom-4 left-4 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white transition-all rounded-lg shadow-xl border border-gray-100" role="alert">
           <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
@@ -171,9 +171,9 @@ const ProductDetail = (props) => {
             {itemInfo && (
               <div className="animate-fade-down animate-once animate-duration-[1500ms] animate-ease-in-out flex flex-col justify-center items-center">
                 {itemInfo.pictures.map((image, index) => (
-                  <>
-                    {index < 4 && <img key={index} onClick={() => setSelectedImage(index)} onMouseEnter={() => setSelectedImage(index)} className={`p-1 my-2 border rounded-xl w-auto h-auto max-h-[4rem] max-w-[4rem] hover:cursor-pointer hover:border-blue-300 ${selectedImage == index ? "border-blue-300" : ""}`} src={image.url} />}
-                  </>
+                  <Fragment key={index}>
+                    {index < 4 && <img onClick={() => setSelectedImage(index)} onMouseEnter={() => setSelectedImage(index)} className={`p-1 my-2 border rounded-xl w-auto h-auto max-h-[4rem] max-w-[4rem] hover:cursor-pointer hover:border-blue-300 ${selectedImage == index ? "border-blue-300" : ""}`} src={image.url} />}
+                  </Fragment>
                 ))}
 
                 {itemInfo.pictures.length == 5 && (
@@ -342,7 +342,7 @@ const ProductDetail = (props) => {
           <section></section>
         )}
       </div>
-    </>
+    </Fragment>
   );
 };
 
