@@ -272,9 +272,9 @@ const ProductDetail = (props) => {
 
           </div>
         ) : (
-          <div className="container w-3/4 h-[45rem] flex items-start">
+          <div className="container w-3/4 h-[45rem] flex items-start cursor-wait">
             <div className="w-2/3 h-full flex flex-wrap px-20">
-              <div className="rounded-lg flex flex-col w-full cursor-wait">
+              <div className="rounded-lg flex flex-col w-full">
                 <div className="rounded-lg animate-pulse bg-gray-300 h-[30rem] w-auto"></div>
                 <div className="animate-pulse flex space-x-4">
                   <div className="flex-1 space-y-6 py-1">
