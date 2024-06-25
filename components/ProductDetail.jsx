@@ -67,10 +67,12 @@ const ProductDetail = (props) => {
 
   const getIsProductInCart = () => {
     const cartProductsLocalStorage = JSON.parse(localStorage.getItem("cartProducts"));
-    if (cartProductsLocalStorage.length > 0) {
-      const productInCart = cartProductsLocalStorage.find((product) => product.id === itemInfo.id) !== undefined;
-      productInCart && setIsProductInCart(true);
-    }
+    if (cartProductsLocalStorage) {
+      if (cartProductsLocalStorage.length > 0) {
+        const productInCart = cartProductsLocalStorage.find((product) => product.id === itemInfo.id) !== undefined;
+        productInCart && setIsProductInCart(true);
+      }
+    } 
   }
 
   const getItemInfo = async () => {
