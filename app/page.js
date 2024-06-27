@@ -5,10 +5,15 @@ import ProductCarousel from '@/components/ProductCarousel';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import Footer from '@/components/Footer';
 import Spinner from '@/components/Spinner';
+import { useSearch } from "@/context/SearchContext";
+import PurchaseConfirmation from '@/components/PurchaseConfirmation';
 
 const Home = () => {
   const [interestCategory, setInterestCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { clientPurchase } = useSearch();
+
 
   const images = [
     'https://http2.mlstatic.com/D_NQ_622369-MLA76685820810_062024-OO.webp',
@@ -53,6 +58,9 @@ const Home = () => {
     { title: "Los termos mas vendidos", endpoint: "termo mate" },
     { title: "Adidas oficial", endpoint: "Zapatillas adidas" },
     { title: "Deportes", endpoint: "futbol" },
+    { title: "Cámaras y Accesorios", endpoint: "Cámaras fotos" },
+    { title: "Consolas y Videojuegos", endpoint: "Consolas" },
+    { title: "Instrumentos Musicales", endpoint: "Instrumentos Musicales" },
     { title: "Hogar, Muebles y Jardín", endpoint: "Hogar, Muebles y Jardín" },
   ];
 
@@ -75,6 +83,8 @@ const Home = () => {
       ))}
 
       <CategoryCarousel />
+
+      {clientPurchase && <PurchaseConfirmation />}
 
       <Footer />
     </div>

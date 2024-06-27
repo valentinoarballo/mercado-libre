@@ -7,6 +7,7 @@ const SearchContext = createContext();
 export const SearchProvider = ({ children }) => {
   const [articles, setArticles] = useState([]);
   const [searchInput, setSearchInput] = useState('');
+  const [clientPurchase, setClientPurchase] = useState(false);
   const [terminoBusqueda, setTerminoBusqueda] = useState('');
   const [paging, setPaging] = useState({ total: 0, offset: 0, limit: 50 });
   const [cartProductsQuantity, setCartProductsQuantity] = useState(0);
@@ -76,7 +77,7 @@ export const SearchProvider = ({ children }) => {
     <SearchContext.Provider value={{
       articles, searchInput, handleSearch, handleKeyUp,
       paging, handleNextPage, handlePrevPage, cartProductsQuantity,
-      setCartProductsQuantity
+      setCartProductsQuantity, clientPurchase, setClientPurchase
     }}>
       {children}
     </SearchContext.Provider>
