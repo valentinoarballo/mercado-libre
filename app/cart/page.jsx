@@ -14,7 +14,7 @@ function ComponentCarousel() {
     [cartTotal, setCartTotal] = useState(0),
     [shippingCost, setShippingCost] = useState(0);
 
-  const { setCartProductsQuantity } = useSearch();
+  const { setCartProductsQuantity, setClientPurchase } = useSearch();
   const router = useRouter();
 
   const handleNext = () => {
@@ -48,6 +48,7 @@ function ComponentCarousel() {
   const finishPurchase = () => {
     localStorage.setItem("cartProducts", "[]");
     setCartProductsQuantity(0);
+    setClientPurchase(true);
     router.push("/");
   };
 

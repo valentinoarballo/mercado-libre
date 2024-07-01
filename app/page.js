@@ -1,12 +1,19 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import HeroCarousel from '@/components/HeroCarousel';
 import ProductCarousel from '@/components/ProductCarousel';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import Footer from '@/components/Footer';
+import Spinner from '@/components/Spinner';
+import { useSearch } from "@/context/SearchContext";
+import PurchaseConfirmation from '@/components/PurchaseConfirmation';
 
 const Home = () => {
   const [interestCategory, setInterestCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { clientPurchase } = useSearch();
+
 
   const images = [
     'https://http2.mlstatic.com/D_NQ_622369-MLA76685820810_062024-OO.webp',
@@ -30,7 +37,32 @@ const Home = () => {
   useEffect(() => {
     const lastSearch = getLastSearch(1);
     setInterestCategory(lastSearch);
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen items-center flex justify-center" role="status">
+        <Spinner size='20' />
+      </div>
+    );
+  }
+
+  const carousels = [
+    ...(interestCategory ? [
+      { title: "Basado en tus búsquedas recientes", endpoint: getLastSearch(1) },
+      { title: "Basado en tus intereses", endpoint: getLastSearch(2) }
+    ] : []),
+    { title: "Mas vendidos de notebooks gamers", endpoint: "notebook gamer rog" },
+    { title: "Mas vendidos en bicis", endpoint: "bicicleta" },
+    { title: "Los termos mas vendidos", endpoint: "termo mate" },
+    { title: "Adidas oficial", endpoint: "Zapatillas adidas" },
+    { title: "Deportes", endpoint: "futbol" },
+    { title: "Cámaras y Accesorios", endpoint: "Cámaras fotos" },
+    { title: "Consolas y Videojuegos", endpoint: "Consolas" },
+    { title: "Instrumentos Musicales", endpoint: "Instrumentos Musicales" },
+    { title: "Hogar, Muebles y Jardín", endpoint: "Hogar, Muebles y Jardín" },
+  ];
 
   return (
     <div>
@@ -38,52 +70,21 @@ const Home = () => {
         <HeroCarousel images={images} />
       </div>
 
-      <div className='animate-fade-left animate-duration-[800ms] animate-once animate-ease-in-out'>
-        <ProductCarousel
-          title={"Mas vendidos de notebooks gamers"}
-          endpointCarousel={"notebook gamer rog"}
-          total={0}
-          offset={0}
-          limit={20}
-        />
-      </div>
-
-      <div className='animate-fade animate-once animate-ease-in-out'>
-        {interestCategory ? (
+      {carousels.map((carousel, index) => (
+        <div key={index} className={`animate-fade-left animate-duration-[800ms] animate-once animate-ease-in-out`}>
           <ProductCarousel
-            title={"Basado en tus búsquedas recientes"}
-            endpointCarousel={getLastSearch(1)}
+            title={carousel.title}
+            endpointCarousel={carousel.endpoint}
             total={0}
             offset={0}
             limit={20}
           />
-
-        ) : (
-          <section></section>
-        )}
-      </div>
+        </div>
+      ))}
 
       <CategoryCarousel />
 
-      <ProductCarousel
-        title={"Mas vendidos en bicis"}
-        endpointCarousel={"bicicleta"}
-        total={0}
-        offset={0}
-        limit={20}
-      />
-
-      {interestCategory ? (
-        <ProductCarousel
-          title={"Basado en tus intereses"}
-          endpointCarousel={getLastSearch(2)}
-          total={0}
-          offset={0}
-          limit={20}
-        />
-      ) : (
-        <section></section>
-      )}
+      {clientPurchase && <PurchaseConfirmation />}
 
       <Footer />
     </div>
